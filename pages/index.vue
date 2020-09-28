@@ -1,93 +1,179 @@
 <template>
-    <v-row justify="center" align="center">
-        <v-col cols="12" sm="8" md="6">
-            <div class="text-center">
-                <logo />
-                <vuetify-logo />
-            </div>
-            <v-card>
-                <v-card-title class="headline">
-                    Welcome to the Vuetify + Nuxt.js template
+    <v-container>
+        <v-card
+            v-for="(section, index) in sections"
+            :key="index + 'section'"
+            :elevation="0"
+            shaped
+            class="mx-auto my-4"
+        >
+            <v-img
+                class="white--text align-end"
+                height="200px"
+                :src="`http://lorempixel.com/1920/1080/business/${index}`"
+            >
+                <v-card-title>
+                    <v-spacer v-if="!!index % 2"></v-spacer>
+                    <span>{{ section.title }}</span>
+                    <v-spacer v-if="!index % 2"></v-spacer>
                 </v-card-title>
+            </v-img>
+
+            <v-card-subtitle v-if="section.subtitle" class="text-center">
+                <span>{{ section.subtitle }}</span>
+            </v-card-subtitle>
+
+            <v-card-text class="text--primary">
+                <p v-for="(c, i) in section.contents" :key="i">
+                    {{ c }}
+                </p>
+            </v-card-text>
+        </v-card>
+
+        <h2 class="text-center my-2">创始人介绍</h2>
+
+        <v-card
+            v-for="(member, index) in members.filter(
+                (m) => m.type === 'founder'
+            )"
+            :key="index + 'founder'"
+            class="mx-auto mb-4"
+        >
+            <v-img
+                :aspect-ratio="1.3"
+                :src="`http://lorempixel.com/1920/1080/people/${index}`"
+            ></v-img>
+
+            <v-card-title>
+                <span class="mr-1">{{ member.name }} </span>
+                <v-chip
+                    v-for="(label, i) in member.labels"
+                    :key="i"
+                    class="ml-2"
+                    :color="label.color || 'primary'"
+                    small
+                >
+                    {{ label.text }}
+                </v-chip>
+            </v-card-title>
+
+            <v-card-text>
+                <div v-if="member.subDesc" class="mb-4 subtitle-1">
+                    {{ member.subDesc }}
+                </div>
+
+                <p v-for="(c, i) in member.contents" :key="i">
+                    {{ c }}
+                </p>
+            </v-card-text>
+        </v-card>
+
+        <h2 class="text-center my-2">团队成员</h2>
+
+        <v-card
+            v-for="(member, index) in members.filter(
+                (m) => m.type !== 'founder'
+            )"
+            :key="index + 'member'"
+            class="mx-auto mb-4"
+        >
+            <v-img
+                :aspect-ratio="2"
+                :src="`http://lorempixel.com/1920/1080/people/${index}`"
+            ></v-img>
+            <v-container>
+                <v-card-title>
+                    <v-spacer></v-spacer>
+                    <span class="mr-1">{{ member.name }} </span>
+                    <v-chip
+                        v-for="(label, i) in member.labels"
+                        :key="i"
+                        class="ml-2"
+                        :color="label.color || 'primary'"
+                        small
+                    >
+                        {{ label.text }}
+                    </v-chip>
+                    <v-spacer></v-spacer>
+                </v-card-title>
+
                 <v-card-text>
-                    <p>
-                        Vuetify is a progressive Material Design component
-                        framework for Vue.js. It was designed to empower
-                        developers to create amazing applications.
-                    </p>
-                    <p>
-                        For more information on Vuetify, check out the
-                        <a
-                            href="https://vuetifyjs.com"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            documentation </a
-                        >.
-                    </p>
-                    <p>
-                        If you have questions, please join the official
-                        <a
-                            href="https://chat.vuetifyjs.com/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="chat"
-                        >
-                            discord </a
-                        >.
-                    </p>
-                    <p>
-                        Find a bug? Report it on the github
-                        <a
-                            href="https://github.com/vuetifyjs/vuetify/issues"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title="contribute"
-                        >
-                            issue board </a
-                        >.
-                    </p>
-                    <p>
-                        Thank you for developing with Vuetify and I look forward
-                        to bringing more exciting features in the future.
-                    </p>
-                    <div class="text-xs-right">
-                        <em><small>&mdash; John Leider</small></em>
+                    <div v-if="member.subDesc" class="mb-4 subtitle-1">
+                        {{ member.subDesc }}
                     </div>
-                    <hr class="my-3" />
-                    <a
-                        href="https://nuxtjs.org/"
-                        target="_blank"
-                        rel="noopener noreferrer"
+
+                    <p
+                        v-for="(c, i) in member.contents"
+                        :key="i"
+                        class="text-center"
                     >
-                        Nuxt Documentation
-                    </a>
-                    <br />
-                    <a
-                        href="https://github.com/nuxt/nuxt.js"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Nuxt GitHub
-                    </a>
+                        {{ c }}
+                    </p>
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer />
-                    <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
+            </v-container>
+        </v-card>
+    </v-container>
 </template>
 
-<script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
-
+<script lang="ts">
 export default {
-    components: {
-        Logo,
-        VuetifyLogo,
-    },
+    components: {},
+    data: () => ({
+        sections: [
+            {
+                title: '公司简介',
+                image: '',
+                contents: [
+                    'asfdasdfasdfasdf',
+                    '啊手动阀手动阀啊手动阀手动阀啊',
+                    '杭州星瀚爱上了对方骄傲就；阿里山的空间发啊啊啊收到了发；阿斯兰的肌肤啊上的分厘卡flask京东方啊啊',
+                ],
+            },
+            {
+                title: '投资理念',
+                subtitle: '二级标题',
+                image: '',
+                contents: [
+                    '啊手动阀手动阀啊手动阀手动阀啊',
+                    '杭州星瀚爱上了对方骄傲就；阿里山的空间发啊啊啊收到了发；阿斯兰的肌肤啊上的分厘卡flask京东方啊啊',
+                ],
+            },
+        ],
+        members: [
+            {
+                name: '丁佩民博士',
+                avatar: '',
+                subDesc: '请他的描述',
+                type: 'founder',
+                labels: [
+                    { text: '创始人', color: 'primary' },
+                    { text: '董事长', color: 'red' },
+                ],
+                contents: [
+                    '初始合伙人：拉萨大家发爱丽丝大量的饭卡；',
+                    '十多年啊收到了饭卡；顺利打开房间啊',
+                ],
+            },
+            {
+                name: 'ZZZZ',
+                avatar: '',
+                type: 'founder',
+                labels: [{ text: 'CTO', color: 'blue' }],
+                contents: [
+                    'asfdasdf：拉萨大家发爱丽丝大量的饭卡；',
+                    '十多年啊收到了饭卡；顺利打开房间啊',
+                ],
+            },
+            {
+                name: 'asdfad',
+                avatar: '',
+                labels: [{ text: 'CTO', color: 'blue' }],
+                contents: [
+                    'asfdasdf：拉萨大家发爱丽丝大量的饭卡；',
+                    '十多年啊收到了饭卡；顺利打开房间啊',
+                ],
+            },
+        ],
+    }),
 }
 </script>
