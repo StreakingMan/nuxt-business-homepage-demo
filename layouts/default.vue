@@ -28,17 +28,17 @@
         </v-sheet>
 
         <v-bottom-navigation :value="activeBtn" grow color="teal" app>
-            <v-btn to="/">
+            <v-btn to="/" height="100%">
                 <span>公司简介</span>
                 <v-icon>mdi-history</v-icon>
             </v-btn>
 
-            <v-btn to="product">
+            <v-btn to="product" height="100%">
                 <span>旗下产品</span>
                 <v-icon>mdi-heart</v-icon>
             </v-btn>
 
-            <v-btn to="/reserve">
+            <v-btn to="/reserve" height="100%">
                 <span>我要预约</span>
                 <v-icon>mdi-map-marker</v-icon>
             </v-btn>
