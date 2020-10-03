@@ -4,7 +4,6 @@ import { expressServer } from './api'
 export default {
     // Global page headers (https://go.nuxtjs.dev/config-head)
     head: {
-        titleTemplate: '%s - xinghan-web-nuxt',
         title: '杭州星瀚投资管理有限公司',
         meta: [
             { charset: 'utf-8' },
