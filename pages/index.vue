@@ -30,7 +30,12 @@
             </v-card-text>
         </v-card>
 
-        <h2 class="text-center my-2">创始人介绍</h2>
+        <h2
+            v-if="members.filter((m) => m.type === 'founder').length"
+            class="text-center my-2"
+        >
+            创始人介绍
+        </h2>
 
         <v-card
             v-for="(member, index) in members.filter(
@@ -65,7 +70,12 @@
             </v-card-text>
         </v-card>
 
-        <h2 class="text-center my-2">团队成员</h2>
+        <h2
+            v-if="members.filter((m) => m.type !== 'founder').length"
+            class="text-center my-2"
+        >
+            团队成员
+        </h2>
 
         <v-card
             v-for="(member, index) in members.filter(

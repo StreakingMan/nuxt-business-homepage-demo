@@ -21,7 +21,11 @@
             <v-spacer></v-spacer>
         </v-app-bar>
 
-        <v-sheet class="overflow-y-auto grey darken-2" height="100vh">
+        <v-sheet
+            v-if="allow"
+            class="overflow-y-auto grey darken-2"
+            height="100vh"
+        >
             <v-main>
                 <nuxt />
             </v-main>
@@ -95,6 +99,7 @@ const redirectUrl =
 
 export default {
     data: () => ({
+        allow: false,
         activeBtn: 0,
         agreeDialog: false,
         confirmLoading: false,
@@ -240,6 +245,7 @@ export default {
                     },
                 })
                 this.agreeDialog = !data
+                this.allow = !!data
             } catch (e) {
                 this.agreeDialog = true
             }
@@ -253,8 +259,18 @@ export default {
         async onConfirm() {
             this.confirmLoading = true
             try {
+                if (!this.userInfo.openid) {
+                    this.snackbar = {
+                        visible: true,
+                        text: '获取用户信息失败，请稍后再试',
+                        color: 'error',
+                    }
+                    return
+                }
+
                 await this.$axios.post('/api/user', this.userInfo)
                 this.agreeDialog = false
+                this.allow = true
                 this.snackbar = {
                     visible: true,
                     text: '已记录您为’合格投资者‘',
