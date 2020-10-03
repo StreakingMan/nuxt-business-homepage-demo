@@ -5,6 +5,7 @@ import { dbConnect } from './db-connect'
 import sectionModel from './models/section'
 import memberModel from './models/member'
 import productModel from './models/product'
+import { wxAppInfo } from './wx-connect'
 
 mongoose.connect(dbConnect, {
     useNewUrlParser: true,
@@ -47,7 +48,7 @@ app.get('/wxCheck', function (req, res) {
     const signature = req.query.signature
     const timestamp = req.query.timestamp
     const nonce = req.query.nonce
-    const token = req.token
+    const token = wxAppInfo.token
     // 字典排序
     const str = [token, timestamp, nonce].sort().join('')
     const result = sha1(str)
