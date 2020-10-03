@@ -265,6 +265,7 @@ export default {
                         text: '获取用户信息失败，请稍后再试',
                         color: 'error',
                     }
+                    this.confirmLoading = false
                     return
                 }
 
