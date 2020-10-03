@@ -40,7 +40,7 @@
                                 <div class="caption text-center">
                                     更新日期({{ product.updatedAt }})
                                 </div>
-                                <h2>{{ product.acc }}</h2>
+                                <h2>{{ product.netAssetValue }}</h2>
                             </v-sheet>
                         </v-responsive>
                     </v-col>
@@ -67,26 +67,17 @@
 export default {
     name: 'Product',
     data: () => ({
-        products: [
-            {
-                title: '星瀚普航',
-                acc: '111%',
-                manager: '张三',
-                updatedAt: 'asdfasdf',
-                createdAt: 'asdf',
-                netAssetValue: 'adf',
-                startingPoint: 'asdf',
-            },
-            {
-                title: '星瀚普航',
-                manager: '李四',
-                acc: '111%',
-                updatedAt: 'asdfasdf',
-                createdAt: 'asdf',
-                netAssetValue: 'adf',
-                startingPoint: 'asdf',
-            },
-        ],
+        products: [],
     }),
+    created() {
+        this.$axios
+            .$get('/api/product')
+            .then((res) => {
+                this.products = res
+            })
+            .catch(() => {
+                //
+            })
+    },
 }
 </script>

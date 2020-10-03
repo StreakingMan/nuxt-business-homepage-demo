@@ -1,4 +1,5 @@
 import colors from 'vuetify/es5/util/colors'
+import { expressServer } from './api'
 
 export default {
     // Global page headers (https://go.nuxtjs.dev/config-head)
@@ -25,6 +26,8 @@ export default {
     // Auto import components (https://go.nuxtjs.dev/config-components)
     components: true,
 
+    serverMiddleware: [expressServer],
+
     // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
     buildModules: [
         // https://go.nuxtjs.dev/typescript
@@ -42,7 +45,10 @@ export default {
     ],
 
     // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-    axios: {},
+    axios: {
+        proxy: true,
+        credential: true,
+    },
 
     // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
     vuetify: {
