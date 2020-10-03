@@ -96,31 +96,12 @@ app.post('/reserve', async function (req, res) {
 })
 
 app.get('/wxAccess', async function (req, res) {
-    const config = await ConfigModel.findOne({})
-    const isFirst = !config || !config.accessInfo
-    const isTimeout =
-        !isFirst && Number(Date.now() - config.accessInfoUpdateAt) / 1000 > 7200
-
-    if (!isFirst && !isTimeout) {
-        res.send(config.accessInfo)
-        return
+    try {
+        const data = await getAccessToken(req.query.code)
+        res.send(data)
+    } catch (e) {
+        res.status(500).send('获取access_token失败' + e)
     }
-
-    const data = await getAccessToken(req.query.code)
-
-    if (!config) {
-        await ConfigModel.create({
-            accessInfo: data,
-            accessInfoUpdateAt: Date.now(),
-        })
-    } else {
-        config.accessInfo = data
-        config.accessInfoUpdateAt = Date.now()
-        const _config = new ConfigModel(config)
-        await _config.save()
-    }
-
-    res.send(data)
 })
 
 app.get('/jsSignature', async function (req, res) {
@@ -129,7 +110,7 @@ app.get('/jsSignature', async function (req, res) {
     const noncestr = req.query.noncestr
     const config = await ConfigModel.findOne({})
 
-    const isFirst = !config || !config.jsTicket
+    const isFirst = !config
     const isTimeout =
         !isFirst && Number(Date.now() - config.jsTicketUpdateAt) / 1000 > 7200
 

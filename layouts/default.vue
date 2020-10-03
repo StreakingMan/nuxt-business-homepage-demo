@@ -113,18 +113,21 @@ export default {
     async mounted() {
         const { code } = this.$route.query
 
-        const { data } = await this.$axios.get('/api/wxAccess', {
-            params: { code },
-        })
+        let accessInfo = {}
 
-        if (!data && !code) {
-            await this.getCode()
-            return
+        if (code) {
+            const { data } = await this.$axios.get('/api/wxAccess', {
+                params: { code },
+            })
+            accessInfo = data
+            localStorage.setItem('openid', accessInfo.openid)
+            localStorage.setItem('access_token', accessInfo.access_token)
+        } else {
+            accessInfo = {
+                access_token: localStorage.getItem('access_token'),
+                openid: localStorage.getItem('openid'),
+            }
         }
-
-        const accessInfo = data
-
-        localStorage.setItem('openid', accessInfo.openid)
 
         await this.getUserInfo(accessInfo.access_token, accessInfo.openid)
 
@@ -149,6 +152,7 @@ export default {
                 this.userInfo = data
             }
         },
+
         getCode() {
             localStorage.clear()
             location.href =
