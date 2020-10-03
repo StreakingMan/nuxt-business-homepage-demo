@@ -7,6 +7,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# 脱敏
+db-connect.js
+wx-connect.js
+
 # Runtime data
 pids
 *.pid

@@ -1,5 +1,6 @@
 import Express from 'express'
 import mongoose from 'mongoose'
+import sha1 from 'sha1'
 import { dbConnect } from './db-connect'
 import sectionModel from './models/section'
 import memberModel from './models/member'
@@ -40,6 +41,24 @@ app.get('/product', function (_req, res) {
             res.json(products)
         }
     })
+})
+
+app.get('/wxCheck', function (req, res) {
+    const signature = req.query.signature
+    const timestamp = req.query.timestamp
+    const nonce = req.query.nonce
+    const token = req.token
+    // 字典排序
+    const str = [token, timestamp, nonce].sort().join('')
+    const result = sha1(str)
+    if (result === signature) {
+        res.send(req.query.echostr)
+    } else {
+        res.json({
+            code: -1,
+            msg: 'fail',
+        })
+    }
 })
 
 export const expressServer = {
