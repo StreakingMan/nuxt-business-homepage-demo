@@ -209,9 +209,9 @@ export default {
                     link:
                         process.env.NODE_ENV === 'development'
                             ? 'http://192.168.0.104:8000/'
-                            : 'http://mylikegame.streakingman.com/game/puzzle', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                            : 'http://xinghan.streakingman.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                     imgUrl:
-                        'http://storge.littleme.streakingman.com/link-logo.jpg', // 分享图标
+                        'http://storge.littleme.streakingman.com/streakYC-%E5%9B%BE%E7%89%87-1558759048534baolei.jpg', // 分享图标
                     success() {
                         // 设置成功
                     },
@@ -222,8 +222,9 @@ export default {
                     link:
                         process.env.NODE_ENV === 'development'
                             ? 'http://192.168.0.104:8000/'
-                            : 'http://mylikegame.streakingman.com/game/puzzle', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    imgUrl: 'http://mylikegame.streakingman.com/game/puzzle', // 分享图标
+                            : 'http://xinghan.streakingman.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl:
+                        'http://storge.littleme.streakingman.com/streakYC-%E5%9B%BE%E7%89%87-1558759048534baolei.jpg', // 分享图标
                     success() {
                         // 设置成功
                     },
