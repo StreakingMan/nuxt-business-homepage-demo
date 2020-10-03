@@ -15,6 +15,7 @@ export default {
             { hid: 'description', name: 'description', content: '' },
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        script: [{ src: 'http://res.wx.qq.com/open/js/jweixin-1.4.0.js' }],
     },
 
     // Global CSS (https://go.nuxtjs.dev/config-css)
@@ -48,6 +49,18 @@ export default {
     axios: {
         proxy: true,
         credential: true,
+    },
+
+    // 微信接口
+    proxy: {
+        '/sns/': {
+            target: 'https://api.weixin.qq.com',
+            changeOrigin: true,
+        },
+        '/cgi-bin/': {
+            target: 'https://api.weixin.qq.com',
+            changeOrigin: true,
+        },
     },
 
     // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)

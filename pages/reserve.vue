@@ -7,30 +7,40 @@
             </p>
 
             <v-select
+                v-model="form.selectedFund"
                 :items="productOptions"
                 :rules="[(v) => !!v || '请选择基金']"
                 label="选择基金"
                 outlined
             ></v-select>
-            <v-text-field label="推荐人" outlined></v-text-field>
+            <v-text-field
+                v-model="form.referee"
+                label="推荐人"
+                outlined
+            ></v-text-field>
 
-            <v-tabs v-model="form.currentType" grow class="mb-8">
+            <v-tabs v-model="form.reserveType" grow class="mb-8">
                 <v-tab>认购</v-tab>
                 <v-tab>申购</v-tab>
                 <v-tab>赎回</v-tab>
             </v-tabs>
 
             <v-text-field
+                v-model="form.money"
                 label="金额"
                 outlined
+                suffix="万(RMB)"
+                type="number"
                 :rules="[(v) => !!v || '请填写金额']"
             ></v-text-field>
             <v-text-field
+                v-model="form.name"
                 label="姓名"
                 outlined
                 :rules="[(v) => !!v || '请填写姓名']"
             ></v-text-field>
             <v-text-field
+                v-model="form.phone"
                 label="联系电话"
                 outlined
                 :rules="[
@@ -39,7 +49,11 @@
                         /^1[3456789]\d{9}$/.test(v) || '请填写正确的手机号码',
                 ]"
             ></v-text-field>
-            <v-textarea label="备注" outlined></v-textarea>
+            <v-textarea
+                v-model="form.remark"
+                label="备注"
+                outlined
+            ></v-textarea>
 
             <v-btn
                 depressed
@@ -52,8 +66,13 @@
             </v-btn>
         </v-container>
 
-        <v-snackbar v-model="snackbar" :timeout="3000" top color="success">
-            预约成功，请等待工作人员联系
+        <v-snackbar
+            v-model="snackbar.visible"
+            :timeout="3000"
+            top
+            :color="snackbar.color || 'info'"
+        >
+            {{ snackbar.text }}
         </v-snackbar>
     </v-form>
 </template>
@@ -63,9 +82,19 @@ export default {
     name: 'Reserve',
     data: () => ({
         form: {
-            currentType: 0,
+            selectedFund: '',
+            referee: '',
+            reserveType: 0,
+            money: '',
+            name: '',
+            phone: '',
+            remark: '',
         },
-        snackbar: false,
+        snackbar: {
+            visible: false,
+            text: '',
+            color: '',
+        },
         loading: false,
         productOptions: [],
     }),
@@ -80,17 +109,37 @@ export default {
             })
     },
     methods: {
-        onConfirm() {
-            console.log(this.form)
+        async onConfirm() {
             const validate = this.$refs.form.validate()
             if (validate) {
                 this.loading = true
-                setTimeout(() => {
-                    this.snackbar = true
-                    this.loading = false
-                }, 3000)
+                try {
+                    await this.$axios.post('/api/reserve', {
+                        openid: localStorage.getItem('openid'),
+                        ...this.form,
+                    })
+                    this.snackbar = {
+                        visible: true,
+                        text: '预约成功，请等待工作人员联系',
+                        color: 'success',
+                    }
+                } catch (e) {
+                    this.snackbar = {
+                        visible: true,
+                        text: '服务器正在开小差，请稍后再试',
+                        color: 'error',
+                    }
+                    console.log(e)
+                }
+                this.loading = false
             }
         },
     },
 }
 </script>
+
+<style>
+html {
+    overflow-y: auto;
+}
+</style>

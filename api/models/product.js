@@ -10,6 +10,6 @@ const productSchema = new mongoose.Schema({
     startingPoint: String,
 })
 
-const productModel = mongoose.model('product', productSchema, 'product')
+const ProductModel = mongoose.model('product', productSchema, 'product')
 
-export default productModel
+export default ProductModel

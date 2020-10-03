@@ -53,13 +53,7 @@
                 </v-card-text>
 
                 <v-card-actions>
-                    <v-btn
-                        x-large
-                        depressed
-                        text
-                        color="red"
-                        @click="agreeDialog = false"
-                    >
+                    <v-btn x-large depressed text color="red" @click="onLeave">
                         离开
                     </v-btn>
 
@@ -69,21 +63,209 @@
                         x-large
                         depressed
                         color="error"
-                        @click="agreeDialog = false"
+                        :loading="confirmLoading"
+                        @click="onConfirm"
                     >
                         确定
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
+
+        <v-snackbar
+            v-model="snackbar.visible"
+            :timeout="3000"
+            top
+            :color="snackbar.color || 'info'"
+        >
+            {{ snackbar.text }}
+        </v-snackbar>
     </v-app>
 </template>
 
 <script>
+const appId =
+    process.env.NODE_ENV === 'development'
+        ? 'wxa275e2c02072f616'
+        : 'wxa275e2c02072f616'
+const redirectUrl =
+    process.env.NODE_ENV === 'development'
+        ? 'http://192.168.0.104:8000'
+        : 'http://xinghan.streakingman.com'
+
 export default {
     data: () => ({
         activeBtn: 0,
-        agreeDialog: true,
+        agreeDialog: false,
+        confirmLoading: false,
+        snackbar: {
+            visible: false,
+            text: '',
+            color: '',
+        },
+        userInfo: {},
     }),
+
+    created() {
+        this.activeBtn = ['/', '/product', '/reserve'].indexOf(this.$route.path)
+    },
+
+    async mounted() {
+        const { code } = this.$route.query
+
+        const { data } = await this.$axios.get('/api/wxAccess', {
+            params: { code },
+        })
+
+        if (!data && !code) {
+            await this.getCode()
+            return
+        }
+
+        const accessInfo = data
+
+        localStorage.setItem('openid', accessInfo.openid)
+
+        await this.getUserInfo(accessInfo.access_token, accessInfo.openid)
+
+        await this.checkPermission()
+
+        await this.jsValidate()
+    },
+
+    methods: {
+        async getUserInfo(accessToken, openid) {
+            const params = {
+                access_token: accessToken,
+                openid,
+                lang: 'zh_CN ',
+            }
+            const { data } = await this.$axios.get('/sns/userinfo', {
+                params,
+            })
+            if (data.errcode) {
+                this.getCode()
+            } else {
+                this.userInfo = data
+            }
+        },
+        getCode() {
+            localStorage.clear()
+            location.href =
+                'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' +
+                appId +
+                '&redirect_uri=' +
+                encodeURIComponent(redirectUrl) +
+                '&response_type=code&scope=snsapi_userinfo#wechat_redirect'
+        },
+
+        async jsValidate() {
+            const timestamp = Math.floor(new Date().getTime() / 1000).toString()
+            const noncestr = Math.random().toString(36).substr(2)
+            const url = location.href.split('#')[0]
+            const params = {}
+            params.noncestr = noncestr
+            params.timestamp = timestamp
+            params.url = url
+
+            let signature = ''
+            try {
+                const { data } = await this.$axios.get('/api/jsSignature', {
+                    params,
+                })
+                signature = data
+            } catch (e) {
+                //
+            }
+            // eslint-disable-next-line no-undef
+            wx.config({
+                debug: process.env.NODE_ENV === 'development', // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId, // 必填，公众号的唯一标识
+                timestamp, // 必填，生成签名的时间戳
+                nonceStr: noncestr, // 必填，生成签名的随机串
+                signature, // 必填，签名
+                jsApiList: [
+                    'updateAppMessageShareData',
+                    'updateTimelineShareData',
+                    'closeWindow',
+                ], // 必填，需要使用的JS接口列表
+            })
+            // eslint-disable-next-line no-undef
+            wx.ready(function () {
+                // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+                // eslint-disable-next-line no-undef
+                wx.updateAppMessageShareData({
+                    title: '星瀚投资微官网', // 分享标题
+                    desc: '杭州星瀚投资管理有限公司', // 分享描述
+                    link:
+                        process.env.NODE_ENV === 'development'
+                            ? 'http://192.168.0.104:8000/'
+                            : 'http://mylikegame.streakingman.com/game/puzzle', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl:
+                        'http://storge.littleme.streakingman.com/link-logo.jpg', // 分享图标
+                    success() {
+                        // 设置成功
+                    },
+                })
+                // eslint-disable-next-line no-undef
+                wx.updateTimelineShareData({
+                    title: '杭州星瀚投资管理有限公司', // 分享标题
+                    link:
+                        process.env.NODE_ENV === 'development'
+                            ? 'http://192.168.0.104:8000/'
+                            : 'http://mylikegame.streakingman.com/game/puzzle', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl: 'http://mylikegame.streakingman.com/game/puzzle', // 分享图标
+                    success() {
+                        // 设置成功
+                    },
+                })
+            })
+
+            // eslint-disable-next-line no-undef
+            wx.error(function (res) {
+                // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
+                console.log(res)
+            })
+        },
+
+        async checkPermission() {
+            try {
+                const { data } = await this.$axios.get('/api/user', {
+                    params: {
+                        openid: this.userInfo.openid,
+                    },
+                })
+                this.agreeDialog = !data
+            } catch (e) {
+                this.agreeDialog = true
+            }
+        },
+
+        onLeave() {
+            // eslint-disable-next-line no-undef
+            wx.closeWindow()
+        },
+
+        async onConfirm() {
+            this.confirmLoading = true
+            try {
+                await this.$axios.post('/api/user', this.userInfo)
+                this.agreeDialog = false
+                this.snackbar = {
+                    visible: true,
+                    text: '已记录您为’合格投资者‘',
+                    color: 'success',
+                }
+            } catch (e) {
+                this.snackbar = {
+                    visible: true,
+                    text: '服务器正在开小差，请稍候再试',
+                    color: 'error',
+                }
+                console.log(e)
+            }
+            this.confirmLoading = false
+        },
+    },
 }
 </script>

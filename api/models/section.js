@@ -7,6 +7,6 @@ const sectionSchema = new mongoose.Schema({
     contents: [String],
 })
 
-const sectionModel = mongoose.model('section', sectionSchema, 'section')
+const SectionModel = mongoose.model('section', sectionSchema, 'section')
 
-export default sectionModel
+export default SectionModel

@@ -1,11 +1,21 @@
 import Express from 'express'
 import mongoose from 'mongoose'
 import sha1 from 'sha1'
+import bodyParser from 'body-parser'
 import { dbConnect } from './db-connect'
-import sectionModel from './models/section'
-import memberModel from './models/member'
-import productModel from './models/product'
+import SectionModel from './models/section'
+import MemberModel from './models/member'
+import ProductModel from './models/product'
+import ConfigModel from './models/config'
+import UserModel from './models/user'
+import ReserveModel from './models/reserve'
 import { wxAppInfo } from './wx-connect'
+import {
+    getJsToken,
+    getJsTicket,
+    generateSignature,
+    getAccessToken,
+} from './wx-utils'
 
 mongoose.connect(dbConnect, {
     useNewUrlParser: true,
@@ -19,9 +29,10 @@ db.once('open', function () {
 })
 
 const app = new Express()
+app.use(bodyParser.json())
 
 app.get('/section', function (_req, res) {
-    sectionModel.find({}, (err, sections) => {
+    SectionModel.find({}, (err, sections) => {
         if (!err) {
             res.json(sections)
         }
@@ -29,7 +40,7 @@ app.get('/section', function (_req, res) {
 })
 
 app.get('/member', function (_req, res) {
-    memberModel.find({}, (err, members) => {
+    MemberModel.find({}, (err, members) => {
         if (!err) {
             res.json(members)
         }
@@ -37,7 +48,7 @@ app.get('/member', function (_req, res) {
 })
 
 app.get('/product', function (_req, res) {
-    productModel.find({}, (err, products) => {
+    ProductModel.find({}, (err, products) => {
         if (!err) {
             res.json(products)
         }
@@ -55,11 +66,112 @@ app.get('/wxCheck', function (req, res) {
     if (result === signature) {
         res.send(req.query.echostr)
     } else {
-        res.json({
-            code: -1,
-            msg: 'fail',
+        res.status(400).send('校验未通过')
+    }
+})
+
+app.post('/user', async function (req, res) {
+    const user = req.body
+    const hasUser = await UserModel.findOne({ openid: user.openid })
+    if (!hasUser) {
+        await UserModel.create(user)
+        res.send('记录成功')
+    }
+})
+
+app.get('/user', async function (req, res) {
+    const findUser = await UserModel.findOne({ openid: req.query.openid })
+    if (findUser) {
+        res.send(findUser)
+    } else {
+        res.status(400).send('未找到用户')
+    }
+})
+
+app.post('/reserve', async function (req, res) {
+    const reserve = req.body
+    reserve.reserveType = ['认购', '申购', '赎回'][reserve.reserveType]
+    await ReserveModel.create(reserve)
+    res.send('预约成功')
+})
+
+app.get('/wxAccess', async function (req, res) {
+    const config = await ConfigModel.findOne({})
+    const isFirst = !config || !config.accessInfo
+    const isTimeout =
+        !isFirst && Number(Date.now() - config.accessInfoUpdateAt) / 1000 > 7200
+
+    if (!isFirst && !isTimeout) {
+        res.send(config.accessInfo)
+        return
+    }
+
+    const data = await getAccessToken(req.query.code)
+
+    if (!config) {
+        await ConfigModel.create({
+            accessInfo: data,
+            accessInfoUpdateAt: Date.now(),
+        })
+    } else {
+        config.accessInfo = data
+        config.accessInfoUpdateAt = Date.now()
+        const _config = new ConfigModel(config)
+        await _config.save()
+    }
+
+    res.send(data)
+})
+
+app.get('/jsSignature', async function (req, res) {
+    const timestamp = req.query.timestamp
+    const url = req.query.url
+    const noncestr = req.query.noncestr
+    const config = await ConfigModel.findOne({})
+
+    const isFirst = !config || !config.jsTicket
+    const isTimeout =
+        !isFirst && Number(Date.now() - config.jsTicketUpdateAt) / 1000 > 7200
+
+    const token = await getJsToken()
+    if (!token) {
+        res.status(500).send('获取token失败')
+        return
+    }
+
+    if (!isTimeout && !isFirst) {
+        // 返回签名
+        const signature = generateSignature(
+            config.jsTicket,
+            noncestr,
+            timestamp,
+            url
+        )
+        res.send(signature)
+        return
+    }
+
+    const jsApiTicket = await getJsTicket(token)
+    if (!jsApiTicket) {
+        res.status(500).send('获取ticket失败')
+        return
+    }
+
+    const signature = generateSignature(jsApiTicket, noncestr, timestamp, url)
+
+    if (config) {
+        config.jsTicket = jsApiTicket
+        config.jsTicketUpdateAt = Date.now()
+        const _config = new ConfigModel(config)
+        await _config.save()
+    } else {
+        await ConfigModel.create({
+            jsTicket: jsApiTicket,
+            jsTicketUpdateAt: Date.now(),
         })
     }
+
+    res.send(signature)
 })
 
 export const expressServer = {
