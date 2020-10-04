@@ -4,7 +4,7 @@
             app
             absolute
             color="#fcb69f"
-            src="http://lorempixel.com/1920/1080?business"
+            src="http://dmt.upload.streakingman.com/xinghan-toolbar-bg.png"
         >
             <template v-slot:img="{ props }">
                 <v-img
@@ -14,9 +14,17 @@
             </template>
 
             <v-spacer></v-spacer>
-            <v-toolbar-title>
-                <v-avatar color="teal" size="36"> XH </v-avatar>
-                <span>星瀚投资</span>
+            <v-toolbar-title class="d-flex align-center">
+                <v-avatar size="36">
+                    <v-img
+                        src="http://dmt.upload.streakingman.com/xinghan-logo.png"
+                    ></v-img>
+                </v-avatar>
+                <v-img
+                    class="d-inline-flex ml-3 mt-1"
+                    max-width="100"
+                    src="http://dmt.upload.streakingman.com/xinghan-logo-text.png"
+                ></v-img>
             </v-toolbar-title>
             <v-spacer></v-spacer>
         </v-app-bar>
@@ -211,7 +219,7 @@ export default {
                             ? 'http://192.168.0.104:8000/'
                             : 'http://xinghan.streakingman.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                     imgUrl:
-                        'http://storge.littleme.streakingman.com/streakYC-%E5%9B%BE%E7%89%87-1558759048534baolei.jpg', // 分享图标
+                        'http://dmt.upload.streakingman.com/xinghan-logo.png', // 分享图标
                     success() {
                         // 设置成功
                     },
@@ -224,7 +232,7 @@ export default {
                             ? 'http://192.168.0.104:8000/'
                             : 'http://xinghan.streakingman.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                     imgUrl:
-                        'http://storge.littleme.streakingman.com/streakYC-%E5%9B%BE%E7%89%87-1558759048534baolei.jpg', // 分享图标
+                        'http://dmt.upload.streakingman.com/xinghan-logo.png', // 分享图标
                     success() {
                         // 设置成功
                     },
