@@ -115,7 +115,7 @@ export default {
                 this.loading = true
                 try {
                     await this.$axios.post('/api/reserve', {
-                        openid: localStorage.getItem('openid'),
+                        // openid: localStorage.getItem('openid'),
                         ...this.form,
                     })
                     this.snackbar = {
