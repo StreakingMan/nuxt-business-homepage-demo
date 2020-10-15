@@ -99,7 +99,7 @@
 const appId =
     process.env.NODE_ENV === 'development'
         ? 'wxa275e2c02072f616'
-        : 'wxa275e2c02072f616'
+        : 'wx6cbe6dd0fca49d5a'
 const redirectUrl =
     process.env.NODE_ENV === 'development'
         ? 'http://192.168.0.104:8000'
@@ -109,7 +109,7 @@ export default {
     data: () => ({
         allow: false,
         activeBtn: 0,
-        agreeDialog: false,
+        agreeDialog: true,
         confirmLoading: false,
         snackbar: {
             visible: false,
@@ -124,7 +124,7 @@ export default {
     },
 
     async mounted() {
-        const { code } = this.$route.query
+        /* const { code } = this.$route.query
 
         let accessInfo = {}
 
@@ -142,9 +142,9 @@ export default {
             }
         }
 
-        await this.getUserInfo(accessInfo.access_token, accessInfo.openid)
+        await this.getUserInfo(accessInfo.access_token, accessInfo.openid) */
 
-        await this.checkPermission()
+        // await this.checkPermission()
 
         await this.jsValidate()
     },
@@ -265,8 +265,11 @@ export default {
             wx.closeWindow()
         },
 
-        async onConfirm() {
-            this.confirmLoading = true
+        onConfirm() {
+            this.agreeDialog = false
+            this.allow = true
+
+            /* this.confirmLoading = true
             try {
                 if (!this.userInfo.openid) {
                     this.snackbar = {
@@ -294,7 +297,7 @@ export default {
                 }
                 console.log(e)
             }
-            this.confirmLoading = false
+            this.confirmLoading = false */
         },
     },
 }
