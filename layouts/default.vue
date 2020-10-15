@@ -218,8 +218,7 @@ export default {
                         process.env.NODE_ENV === 'development'
                             ? 'http://192.168.0.104:8000/'
                             : 'http://xinghan.streakingman.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    imgUrl:
-                        'http://dmt.upload.streakingman.com/xinghan-logo.png', // 分享图标
+                    imgUrl: 'http://xinghan.streakingman.com/xinghan-logo.png', // 分享图标
                     success() {
                         // 设置成功
                     },
@@ -231,8 +230,7 @@ export default {
                         process.env.NODE_ENV === 'development'
                             ? 'http://192.168.0.104:8000/'
                             : 'http://xinghan.streakingman.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                    imgUrl:
-                        'http://dmt.upload.streakingman.com/xinghan-logo.png', // 分享图标
+                    imgUrl: 'http://xinghan.streakingman.com/xinghan-logo.png', // 分享图标
                     success() {
                         // 设置成功
                     },
