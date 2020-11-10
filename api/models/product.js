@@ -8,6 +8,9 @@ const productSchema = new mongoose.Schema({
     createdAt: String,
     netAssetValue: String,
     startingPoint: String,
+    netAssetValueTend: Array,
+    netAssetValueStartLabel: String,
+    netAssetValueEndLabel: String,
 })
 
 const ProductModel = mongoose.model('product', productSchema, 'product')
