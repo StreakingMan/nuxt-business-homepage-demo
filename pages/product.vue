@@ -19,6 +19,7 @@
                     <div class="caption">单位净值走势</div>
                     <v-sparkline
                         :value="product.netAssetValueTend"
+                        :line-width="1"
                         color="rgba(255, 255, 255, .7)"
                         height="100"
                         padding="32"
