@@ -29,15 +29,13 @@
             <v-spacer></v-spacer>
         </v-app-bar>
 
-        <v-sheet
+        <div
             v-if="allow"
             class="overflow-y-auto grey darken-2"
-            height="100vh"
+            style="height: 100vh; padding: 56px 0"
         >
-            <v-main>
-                <nuxt />
-            </v-main>
-        </v-sheet>
+            <nuxt />
+        </div>
 
         <v-bottom-navigation :value="activeBtn" grow color="teal" app>
             <v-btn to="/" height="100%">

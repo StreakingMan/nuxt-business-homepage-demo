@@ -5,7 +5,7 @@
             :key="index + 'section'"
             :elevation="0"
             shaped
-            class="mx-auto my-4"
+            class="mx-auto mb-4"
         >
             <v-img
                 class="white--text align-end"

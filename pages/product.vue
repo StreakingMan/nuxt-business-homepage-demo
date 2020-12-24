@@ -4,7 +4,7 @@
             v-for="(product, index) in products"
             :key="index + 'products'"
             :elevation="0"
-            class="mx-auto my-4"
+            class="mx-auto mb-4"
         >
             <v-card-title>
                 {{ product.title }}
@@ -76,7 +76,7 @@
                     </v-col>
                 </v-row>
                 <v-row class="mx-3">
-                    <span>投资经理：{{ product.manager }}</span>
+                    <span>基金经理：{{ product.manager }}</span>
                     <v-spacer></v-spacer>
                     <span>成立日期：{{ product.createdAt }}</span>
                 </v-row>
