@@ -14,7 +14,10 @@ export default {
             { hid: 'description', name: 'description', content: '' },
         ],
         link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-        script: [{ src: 'http://res.wx.qq.com/open/js/jweixin-1.4.0.js' }],
+        script: [
+            { src: 'http://res.wx.qq.com/open/js/jweixin-1.4.0.js' },
+            { src: 'echarts.common.min.js' },
+        ],
     },
 
     // Global CSS (https://go.nuxtjs.dev/config-css)

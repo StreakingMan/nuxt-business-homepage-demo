@@ -16,28 +16,10 @@
                     rounded
                     elevation="0"
                 >
-                    <div class="caption">单位净值走势</div>
-                    <v-sparkline
-                        :value="product.netAssetValueTend"
-                        :line-width="1"
-                        color="rgba(255, 255, 255, .7)"
-                        height="100"
-                        padding="32"
-                        stroke-linecap="round"
-                        label-size="10"
-                        smooth
-                    >
-                        <template v-slot:label="item">
-                            {{
-                                item.index === 0
-                                    ? product.netAssetValueStartLabel
-                                    : item.index ===
-                                      product.netAssetValueTend.length - 1
-                                    ? product.netAssetValueEndLabel
-                                    : ''
-                            }}
-                        </template>
-                    </v-sparkline>
+                    <div
+                        :id="product._id"
+                        style="width: 100%; height: 200px"
+                    ></div>
                 </v-sheet>
 
                 <v-row class="mx-0">
@@ -105,10 +87,110 @@ export default {
         this.$axios
             .$get('/api/product')
             .then((res) => {
+                res.forEach((p) => {
+                    if (p.netAssetValueTend) {
+                        p.netAssetValueTend = p.netAssetValueTend.map((i) =>
+                            String(i).substring(0, 4)
+                        )
+                    }
+                    if (p['500valueTend']) {
+                        p['500valueTend'] = p['500valueTend'].map((i) =>
+                            String(i).substring(0, 4)
+                        )
+                    }
+                })
                 this.products = res
             })
             .catch(() => {
                 //
+            })
+            .finally(() => {
+                this.products.forEach((p) => {
+                    // 基于准备好的dom，初始化echarts实例
+                    const myChart = window.echarts.init(
+                        document.getElementById(p._id)
+                    )
+
+                    // 指定图表的配置项和数据
+                    const option = {
+                        color: ['#FFBA00', '#FE694A'],
+                        legend: {
+                            data: ['单位净值走势', '中证500净值走势'],
+
+                            textStyle: {
+                                color: 'white',
+                            },
+                        },
+                        grid: {
+                            left: 0,
+                            right: 16,
+                            bottom: 0,
+                            top: 24,
+                            containLabel: true,
+                        },
+                        /* tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                lineStyle: {
+                                    color: 'rgba(255,255,255,0.4)',
+                                    type: 'dashed',
+                                },
+                            },
+                            confine: true,
+                        }, */
+                        xAxis: {
+                            type: 'category',
+                            data: p.timeTend,
+                            axisLabel: {
+                                color: '#999',
+                                interval: 10000000,
+                                showMinLabel: true,
+                                showMaxLabel: true,
+                            },
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLine: {
+                                show: false,
+                            },
+                            axisTick: {
+                                show: false,
+                            },
+                            axisLabel: {
+                                color: '#999',
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    type: 'dashed',
+                                    color: '#333',
+                                },
+                            },
+                            min: 'dataMin',
+                            max: 'dataMax',
+                        },
+                        series: [
+                            {
+                                name: '单位净值走势',
+                                type: 'line',
+                                data: p.netAssetValueTend,
+                                lineStyle: {
+                                    width: 1,
+                                },
+                            },
+                            {
+                                name: '中证500净值走势',
+                                type: 'line',
+                                data: p['500valueTend'],
+                                lineStyle: {
+                                    width: 1,
+                                },
+                            },
+                        ],
+                    }
+
+                    // 使用刚指定的配置项和数据显示图表。
+                    myChart.setOption(option)
+                })
             })
     },
 }
