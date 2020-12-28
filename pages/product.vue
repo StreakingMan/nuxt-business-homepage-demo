@@ -4,22 +4,34 @@
             v-for="(product, index) in products"
             :key="index + 'products'"
             :elevation="0"
-            class="mx-auto mb-4"
+            class="mb-4"
         >
             <v-card-title>
                 {{ product.title }}
             </v-card-title>
             <v-card-text>
                 <v-sheet
-                    class="mx-3 mb-2 pa-2"
+                    class="mb-2 pa-2"
                     color="grey darken-3"
                     rounded
+                    style="position: relative"
                     elevation="0"
                 >
                     <div
                         :id="product._id"
                         style="width: 100%; height: 200px"
                     ></div>
+                    <div
+                        style="
+                            position: absolute;
+                            left: 4px;
+                            bottom: 4px;
+                            font-size: 10px;
+                            color: #999;
+                        "
+                    >
+                        {{ product.timeTend[0].substring(0, 10) }}
+                    </div>
                 </v-sheet>
 
                 <v-row class="mx-0">
@@ -83,11 +95,16 @@ export default {
     data: () => ({
         products: [],
     }),
-    created() {
+    mounted() {
         this.$axios
             .$get('/api/product')
             .then((res) => {
                 res.forEach((p) => {
+                    if (p.timeTend) {
+                        p.timeTend = p.timeTend.map((i) =>
+                            String(i).substring(0, 10)
+                        )
+                    }
                     if (p.netAssetValueTend) {
                         p.netAssetValueTend = p.netAssetValueTend.map((i) =>
                             String(i).substring(0, 4)
@@ -115,15 +132,19 @@ export default {
                     const option = {
                         color: ['#FFBA00', '#FE694A'],
                         legend: {
-                            data: ['单位净值走势', '中证500净值走势'],
-
+                            data: [
+                                { name: '单位净值走势', icon: 'rect' },
+                                { name: '中证500净值走势', icon: 'rect' },
+                            ],
                             textStyle: {
                                 color: 'white',
                             },
+                            itemWidth: 24,
+                            itemHeight: 2,
                         },
                         grid: {
                             left: 0,
-                            right: 16,
+                            right: 0,
                             bottom: 0,
                             top: 24,
                             containLabel: true,
@@ -144,8 +165,14 @@ export default {
                             axisLabel: {
                                 color: '#999',
                                 interval: 10000000,
-                                showMinLabel: true,
+                                showMinLabel: false,
                                 showMaxLabel: true,
+                                align: 'right',
+                                fontSize: 12,
+                            },
+                            boundaryGap: false,
+                            axisTick: {
+                                show: false,
                             },
                         },
                         yAxis: {
@@ -170,6 +197,7 @@ export default {
                         },
                         series: [
                             {
+                                symbol: 'none',
                                 name: '单位净值走势',
                                 type: 'line',
                                 data: p.netAssetValueTend,
@@ -178,6 +206,7 @@ export default {
                                 },
                             },
                             {
+                                symbol: 'none',
                                 name: '中证500净值走势',
                                 type: 'line',
                                 data: p['500valueTend'],
