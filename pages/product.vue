@@ -7,7 +7,9 @@
             class="mb-4"
         >
             <v-card-title>
-                {{ product.title }}
+                <div style="width: 100%; text-align: center">
+                    {{ product.title }}
+                </div>
             </v-card-title>
             <v-card-text>
                 <v-sheet
@@ -60,9 +62,31 @@
                                 width="100%"
                                 class="d-flex flex-column align-center justify-center"
                             >
-                                <div class="caption text-center">单位净值</div>
                                 <div class="caption text-center">
-                                    更新日期({{ product.updatedAt }})
+                                    今年以来收益
+                                </div>
+                                <h2>{{ product.yearAcc }}</h2>
+                            </v-sheet>
+                        </v-responsive>
+                    </v-col>
+                    <v-col>
+                        <v-responsive aspect-ratio="1">
+                            <v-sheet
+                                color="grey darken-3"
+                                rounded
+                                elevation="0"
+                                height="100%"
+                                width="100%"
+                                class="d-flex flex-column align-center justify-center"
+                            >
+                                <div class="caption text-center">
+                                    最新净值
+                                    <br />
+                                    ({{
+                                        product.timeTend[
+                                            product.timeTend.length - 1
+                                        ].substring(0, 10)
+                                    }})
                                 </div>
                                 <h2>{{ product.netAssetValue }}</h2>
                             </v-sheet>
@@ -130,10 +154,10 @@ export default {
 
                     // 指定图表的配置项和数据
                     const option = {
-                        color: ['#FFBA00', '#FE694A'],
+                        color: ['#d14a61', '#5793f3'],
                         legend: {
                             data: [
-                                { name: '单位净值走势', icon: 'rect' },
+                                { name: p.title, icon: 'rect' },
                                 { name: '中证500净值走势', icon: 'rect' },
                             ],
                             textStyle: {
@@ -198,7 +222,7 @@ export default {
                         series: [
                             {
                                 symbol: 'none',
-                                name: '单位净值走势',
+                                name: p.title,
                                 type: 'line',
                                 data: p.netAssetValueTend,
                                 lineStyle: {
