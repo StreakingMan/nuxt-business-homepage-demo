@@ -28,7 +28,7 @@
                             position: absolute;
                             left: 4px;
                             bottom: 4px;
-                            font-size: 10px;
+                            font-size: 12px;
                             color: #999;
                         "
                     >
@@ -36,63 +36,70 @@
                     </div>
                 </v-sheet>
 
-                <v-row class="mx-0">
-                    <v-col>
-                        <v-responsive aspect-ratio="1">
-                            <v-sheet
-                                color="grey darken-3"
-                                rounded
-                                elevation="0"
-                                height="100%"
-                                width="100%"
-                                class="d-flex flex-column align-center justify-center"
-                            >
-                                <div class="caption text-center">累计收益</div>
-                                <h2>{{ product.acc }}</h2>
-                            </v-sheet>
-                        </v-responsive>
-                    </v-col>
-                    <v-col>
-                        <v-responsive aspect-ratio="1">
-                            <v-sheet
-                                color="grey darken-3"
-                                rounded
-                                elevation="0"
-                                height="100%"
-                                width="100%"
-                                class="d-flex flex-column align-center justify-center"
-                            >
-                                <div class="caption text-center">
-                                    今年以来收益
-                                </div>
-                                <h2>{{ product.yearAcc }}</h2>
-                            </v-sheet>
-                        </v-responsive>
-                    </v-col>
-                    <v-col>
-                        <v-responsive aspect-ratio="1">
-                            <v-sheet
-                                color="grey darken-3"
-                                rounded
-                                elevation="0"
-                                height="100%"
-                                width="100%"
-                                class="d-flex flex-column align-center justify-center"
-                            >
-                                <div class="caption text-center">
-                                    最新净值
-                                    <br />
-                                    ({{
-                                        product.timeTend[
-                                            product.timeTend.length - 1
-                                        ].substring(0, 10)
-                                    }})
-                                </div>
-                                <h2>{{ product.netAssetValue }}</h2>
-                            </v-sheet>
-                        </v-responsive>
-                    </v-col>
-                </v-row>
+                <div
+                    style="
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        grid-gap: 16px;
+                    "
+                    class="my-4 px-2"
+                >
+                    <v-responsive aspect-ratio="1">
+                        <v-sheet
+                            color="grey darken-3"
+                            rounded
+                            elevation="0"
+                            height="100%"
+                            width="100%"
+                            class="d-flex flex-column align-center justify-center"
+                        >
+                            <div class="caption text-center">累计收益</div>
+                            <h2>{{ product.acc }}</h2>
+                        </v-sheet>
+                    </v-responsive>
+                    <v-responsive aspect-ratio="1">
+                        <v-sheet
+                            color="grey darken-3"
+                            rounded
+                            elevation="0"
+                            height="100%"
+                            width="100%"
+                            class="d-flex flex-column align-center justify-center"
+                        >
+                            <div class="caption text-center">今年以来收益</div>
+                            <h2>{{ product.yearAcc }}</h2>
+                        </v-sheet>
+                    </v-responsive>
+                    <v-responsive aspect-ratio="1">
+                        <v-sheet
+                            color="grey darken-3"
+                            rounded
+                            elevation="0"
+                            height="100%"
+                            width="100%"
+                            class="d-flex flex-column align-center justify-center"
+                        >
+                            <div class="caption text-center">
+                                最新净值
+                                <br />
+                                ({{
+                                    product.timeTend[
+                                        product.timeTend.length - 1
+                                    ].substring(0, 10)
+                                }})
+                            </div>
+                            <h2>
+                                {{
+                                    String(product.netAssetValue).substring(
+                                        0,
+                                        4
+                                    )
+                                }}
+                            </h2>
+                        </v-sheet>
+                    </v-responsive>
+                </div>
+
                 <v-row class="mx-3">
                     <span>基金经理：{{ product.manager }}</span>
                     <v-spacer></v-spacer>
