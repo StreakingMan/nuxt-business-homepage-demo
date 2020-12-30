@@ -92,7 +92,7 @@
                                 {{
                                     String(product.netAssetValue).substring(
                                         0,
-                                        4
+                                        6
                                     )
                                 }}
                             </h2>
