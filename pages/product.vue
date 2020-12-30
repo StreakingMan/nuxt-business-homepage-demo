@@ -154,7 +154,7 @@ export default {
 
                     // 指定图表的配置项和数据
                     const option = {
-                        color: ['#d14a61', '#5793f3'],
+                        color: ['#d14a61', '#999'],
                         legend: {
                             data: [
                                 { name: p.title, icon: 'rect' },
