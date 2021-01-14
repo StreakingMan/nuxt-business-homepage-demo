@@ -36,14 +36,7 @@
                     </div>
                 </v-sheet>
 
-                <div
-                    style="
-                        display: grid;
-                        grid-template-columns: repeat(3, 1fr);
-                        grid-gap: 16px;
-                    "
-                    class="my-4 px-2"
-                >
+                <div style="display: flex" class="my-4 px-2">
                     <v-responsive aspect-ratio="1">
                         <v-sheet
                             color="grey darken-3"
@@ -57,6 +50,7 @@
                             <h2>{{ product.acc }}</h2>
                         </v-sheet>
                     </v-responsive>
+                    <div style="width: 16px"></div>
                     <v-responsive aspect-ratio="1">
                         <v-sheet
                             color="grey darken-3"
@@ -70,6 +64,7 @@
                             <h2>{{ product.yearAcc }}</h2>
                         </v-sheet>
                     </v-responsive>
+                    <div style="width: 16px"></div>
                     <v-responsive aspect-ratio="1">
                         <v-sheet
                             color="grey darken-3"
