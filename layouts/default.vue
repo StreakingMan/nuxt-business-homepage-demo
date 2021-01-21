@@ -298,3 +298,10 @@ export default {
     },
 }
 </script>
+
+<style>
+body {
+    height: 100vh !important;
+    overflow-y: hidden;
+}
+</style>
