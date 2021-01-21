@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-card
-            v-for="(section, index) in sections.slice(0, 1)"
+            v-for="(section, index) in sections.slice(0, sections.length - 1)"
             :key="index + 'section'"
             :elevation="0"
             shaped
@@ -71,20 +71,20 @@
             <v-img
                 class="white--text align-end"
                 height="200px"
-                :src="sections[2].image"
+                :src="contactInfo.image"
             >
                 <v-card-title>
                     <v-spacer></v-spacer>
-                    <span>{{ sections[2].title }}</span>
+                    <span>{{ contactInfo.title }}</span>
                 </v-card-title>
             </v-img>
 
-            <v-card-subtitle v-if="sections[2].subtitle" class="text-center">
-                <span>{{ sections[2].subtitle }}</span>
+            <v-card-subtitle v-if="contactInfo.subtitle" class="text-center">
+                <span>{{ contactInfo.subtitle }}</span>
             </v-card-subtitle>
 
             <v-card-text class="text--primary">
-                <p v-for="(c, i) in sections[2].contents" :key="i">
+                <p v-for="(c, i) in contactInfo.contents" :key="i">
                     {{ c }}
                 </p>
             </v-card-text>
@@ -103,6 +103,12 @@ export default {
             fundManager: '基金经理介绍',
         },
     }),
+    computed: {
+        contactInfo() {
+            const sectionLength = this.sections.length
+            return sectionLength ? this.sections[sectionLength - 1] : {}
+        },
+    },
     created() {
         this.$axios
             .$get('/api/section')
