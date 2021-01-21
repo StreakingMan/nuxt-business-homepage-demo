@@ -1,7 +1,7 @@
 <template>
     <v-container>
         <v-card
-            v-for="(section, index) in sections"
+            v-for="(section, index) in sections.slice(0, 1)"
             :key="index + 'section'"
             :elevation="0"
             shaped
@@ -66,6 +66,29 @@
                 </p>
             </v-card-text>
         </v-card>
+
+        <v-card :elevation="0" class="mx-auto mb-4">
+            <v-img
+                class="white--text align-end"
+                height="200px"
+                :src="sections[2].image"
+            >
+                <v-card-title>
+                    <v-spacer></v-spacer>
+                    <span>{{ sections[2].title }}</span>
+                </v-card-title>
+            </v-img>
+
+            <v-card-subtitle v-if="sections[2].subtitle" class="text-center">
+                <span>{{ sections[2].subtitle }}</span>
+            </v-card-subtitle>
+
+            <v-card-text class="text--primary">
+                <p v-for="(c, i) in sections[2].contents" :key="i">
+                    {{ c }}
+                </p>
+            </v-card-text>
+        </v-card>
     </v-container>
 </template>
 
@@ -73,7 +96,7 @@
 export default {
     components: {},
     data: () => ({
-        sections: [],
+        sections: [{}, {}, {}],
         members: [],
         typeDescMap: {
             founder: '创始人介绍',
