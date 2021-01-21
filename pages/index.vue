@@ -13,9 +13,8 @@
                 :src="section.image"
             >
                 <v-card-title>
-                    <v-spacer v-if="!!index % 2"></v-spacer>
+                    <v-spacer></v-spacer>
                     <span>{{ section.title }}</span>
-                    <v-spacer v-if="!index % 2"></v-spacer>
                 </v-card-title>
             </v-img>
 
@@ -30,21 +29,19 @@
             </v-card-text>
         </v-card>
 
-        <h2
-            v-if="members.filter((m) => m.type === 'founder').length"
-            class="text-center my-2"
-        >
-            创始人介绍
-        </h2>
-
         <v-card
-            v-for="(member, index) in members.filter(
-                (m) => m.type === 'founder'
-            )"
+            v-for="(member, index) in members"
             :key="index + 'founder'"
             class="mx-auto mb-4"
         >
-            <v-img :aspect-ratio="1.3" :src="member.avatar"></v-img>
+            <v-img :aspect-ratio="1.3" :src="member.avatar">
+                <v-card-title
+                    style="position: absolute; bottom: 0; width: 100%"
+                >
+                    <v-spacer></v-spacer>
+                    <span>{{ typeDescMap[member.type] }}</span>
+                </v-card-title>
+            </v-img>
 
             <v-card-title>
                 <span class="mr-1">{{ member.name }} </span>
@@ -69,53 +66,6 @@
                 </p>
             </v-card-text>
         </v-card>
-
-        <h2
-            v-if="members.filter((m) => m.type !== 'founder').length"
-            class="text-center my-2"
-        >
-            团队成员
-        </h2>
-
-        <v-card
-            v-for="(member, index) in members.filter(
-                (m) => m.type !== 'founder'
-            )"
-            :key="index + 'member'"
-            class="mx-auto mb-4"
-        >
-            <v-img :aspect-ratio="2" :src="member.avatar"></v-img>
-            <v-container>
-                <v-card-title>
-                    <v-spacer></v-spacer>
-                    <span class="mr-1">{{ member.name }} </span>
-                    <v-chip
-                        v-for="(label, i) in member.labels"
-                        :key="i"
-                        class="ml-2"
-                        :color="label.color || 'primary'"
-                        small
-                    >
-                        {{ label.text }}
-                    </v-chip>
-                    <v-spacer></v-spacer>
-                </v-card-title>
-
-                <v-card-text>
-                    <div v-if="member.subDesc" class="mb-4 subtitle-1">
-                        {{ member.subDesc }}
-                    </div>
-
-                    <p
-                        v-for="(c, i) in member.contents"
-                        :key="i"
-                        class="text-center"
-                    >
-                        {{ c }}
-                    </p>
-                </v-card-text>
-            </v-container>
-        </v-card>
     </v-container>
 </template>
 
@@ -125,6 +75,10 @@ export default {
     data: () => ({
         sections: [],
         members: [],
+        typeDescMap: {
+            founder: '创始人介绍',
+            fundManager: '基金经理介绍',
+        },
     }),
     created() {
         this.$axios
