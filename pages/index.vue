@@ -56,10 +56,10 @@
                 </v-chip>
             </v-card-title>
 
-            <v-card-text>
-                <div v-if="member.subDesc" class="mb-4 subtitle-1">
+            <v-card-text class="text--primary">
+                <p v-if="member.subDesc">
                     {{ member.subDesc }}
-                </div>
+                </p>
 
                 <p v-for="(c, i) in member.contents" :key="i">
                     {{ c }}
