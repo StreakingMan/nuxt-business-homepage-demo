@@ -233,7 +233,7 @@ export default {
                             },
                             {
                                 symbol: 'none',
-                                name: '中证500净值走势',
+                                name: p.compareTitle || '中证500净值走势',
                                 type: 'line',
                                 data: p['500valueTend'],
                                 lineStyle: {

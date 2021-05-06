@@ -31,7 +31,7 @@
 
         <v-card
             v-for="(member, index) in members"
-            :key="index + 'founder'"
+            :key="index"
             class="mx-auto mb-4"
         >
             <v-img :aspect-ratio="1.3" :src="member.avatar">
@@ -39,7 +39,7 @@
                     style="position: absolute; bottom: 0; width: 100%"
                 >
                     <v-spacer></v-spacer>
-                    <span>{{ typeDescMap[member.type] }}</span>
+                    <span>{{ member.desc }}</span>
                 </v-card-title>
             </v-img>
 
@@ -98,10 +98,6 @@ export default {
     data: () => ({
         sections: [{}, {}, {}],
         members: [],
-        typeDescMap: {
-            founder: '创始人介绍',
-            fundManager: '基金经理介绍',
-        },
     }),
     computed: {
         contactInfo() {
