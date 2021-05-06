@@ -1,5 +1,22 @@
 # xinghan-web-nuxt
 
+## 私募基金企业首页官网demo
+
+使用nuxt+vuetify+mongoose搭建，[live demo](http://xinghan.streakingman.com/)
+
+### 简介
+
+![image-20210506213240117](http://media-bed.streakingman.com/image-20210506213240117.png)
+
+### 产品
+
+
+![image-20210506213444766](http://media-bed.streakingman.com/image-20210506213444766.png)
+
+## 预约
+
+![image-20210506213554379](http://media-bed.streakingman.com/image-20210506213554379.png)
+
 ## Build Setup
 
 ```bash
