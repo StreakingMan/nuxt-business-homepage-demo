@@ -160,7 +160,7 @@ export default {
                         legend: {
                             data: [
                                 { name: p.title, icon: 'rect' },
-                                { name: '中证500净值走势', icon: 'rect' },
+                                { name: p.compareTitle, icon: 'rect' },
                             ],
                             textStyle: {
                                 color: 'white',
@@ -233,7 +233,7 @@ export default {
                             },
                             {
                                 symbol: 'none',
-                                name: p.compareTitle || '中证500净值走势',
+                                name: p.compareTitle,
                                 type: 'line',
                                 data: p['500valueTend'],
                                 lineStyle: {
