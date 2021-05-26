@@ -1,6 +1,6 @@
 # xinghan-web-nuxt
 
-## 私募基金企业首页官网demo
+## 企业首页官网demo
 
 使用nuxt+vuetify+mongoose搭建，[live demo](http://xinghan.streakingman.com/)
 
