@@ -35,6 +35,15 @@
             style="height: 100vh; padding: 56px 0"
         >
             <nuxt />
+            <div style="display: flex; justify-content: center">
+                <a
+                    href="https://beian.miit.gov.cn/"
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                >
+                    浙ICP备17007857号-2
+                </a>
+            </div>
         </div>
 
         <v-bottom-navigation :value="activeBtn" grow color="teal" app>
